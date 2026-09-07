@@ -1,0 +1,77 @@
+# i3blocks configuration file
+#
+# The i3blocks man page describes the usage of the binary,
+# and its website describes the configuration:
+#
+#     https://vivien.github.io/i3blocks
+
+
+#Global properties
+#separator=true
+#separator_block_width=15
+
+#[documentation]
+#full_text=Documentation
+#website=https://vivien.github.io/i3blocks
+#command=xdg-open "$website"
+#color=#f12711
+
+[greetings]
+color=#f5af19
+command=echo "Hello, $USER!"
+interval=once
+
+[spotify]
+label= 
+command=python ~/.config/i3blocks/i3blocks-spotify/spotify.py
+interval=1
+separator=true
+
+[bluetooth]
+command=~/.config/i3blocks/scripts/bluetooth-status.sh
+interval=5
+
+[wifi]
+label= 
+command=SSID=$(iwgetid -r 2>/dev/null || echo "No Wi-Fi"); echo " $SSID"
+interval=3
+separator=true
+command_click=urxvt -e sh -c "nmcli d wifi list; echo ''; echo 'Connect with: nmcli dev wifi connect <SSID>'; bash --norc"
+
+[volume]
+label= 
+command=amixer get Master | grep -E -o '[0-9]+%' | sed -n '2p' | awk '{printf " %s", $0}'
+interval=1
+separator=true
+
+[temperature]
+label= 
+command=T=$(cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null || echo 0); echo " $((T/1000))°C"
+interval=10
+separator=true
+
+#[battery]
+#label= 
+## Pobiera wartość z pierwszego dostępnego katalogu BAT* w sys/class/power_supply
+#command=cat $(ls -d /sys/class/power_supply/BAT* 2>/dev/null | head -n1)/capacity 2>/dev/null | awk '{print " "$1"%"}'
+#interval=30
+#separator=true
+[battery]
+command=~/.config/i3blocks/scripts/battery.sh
+interval=30
+signal=1
+separator=true
+
+[time]
+label= 
+command=date '+ %H:%M'
+interval=2
+separator=true
+
+[day]
+label= 
+command=date '+%d.%m.%Y'
+interval=60
+separator=true
+command_click=gsimplecal &
+
